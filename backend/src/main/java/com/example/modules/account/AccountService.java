@@ -11,8 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Slf4j
 @Service
@@ -95,18 +99,20 @@ public class AccountService {
         return obj;
     }
 
-    public JsonObject auth(AuthForm authForm) {
-        Account account = accountRepository.findByToken(authForm.getToken());
+    public JsonObject auth(HttpServletRequest request) {
+//        Account account = accountRepository.findByToken(authForm.getToken());
+        HttpSession session = request.getSession(false);
 
         // 로그아웃
         JsonObject obj = new JsonObject();
-        if (account == null) {
+        if (session == null) {
             obj.addProperty("isAuth", false);
 
             return obj;
         }
 
         // 여기부턴 로그인된 사용자
+        Account account = (Account) session.getAttribute("LOGIN_USER");
 
         // 로그인 && 이메일 인증 됐다면
         if (account.getEmailVerified()) {

@@ -4,25 +4,20 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import useReduxAuth from "../redux/hooks/useReduxAuth";
 
 function Layout() {
-  const { authInfo, onAuth } = useReduxAuth();
-  const navigate = useNavigate();
+  const { authInfo } = useReduxAuth();
 
   const onLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const token = localStorage.getItem("x_auth");
 
     axios
-      .post(
+      .get(
         "/api/logout",
-        { token },
         {
           headers: { "content-type": "application/json" },
         }
       )
       .then((res) => {
         if (res.data) {
-          console.log("로그아웃 하셨습니다.");
-          localStorage.removeItem("x_auth");
           return window.location.replace("/");
         } else {
           console.log("로그아웃 실패");

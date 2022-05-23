@@ -9,7 +9,7 @@ function useReduxAuth() {
   const dispatch = useDispatch();
 
   const onAuth = useCallback(
-    (data: any) => dispatch(authUser(data)),
+    () => dispatch(authUser()),
     [dispatch]
   );
 

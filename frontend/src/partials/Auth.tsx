@@ -18,7 +18,8 @@ function Auth({
 
   useEffect(() => {
     const token = localStorage.getItem("x_auth");
-    onAuth({ token });
+    onAuth();
+    console.log(authInfo);
   }, []);
 
   switch (option) {

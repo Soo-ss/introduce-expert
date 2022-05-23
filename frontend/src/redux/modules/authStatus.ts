@@ -2,9 +2,9 @@ import axios from "axios";
 
 const AUTH_USER = "auth/AUTH_USER" as const;
 
-export const authUser = (dataToSubmit: any) => {
+export const authUser = () => {
   const request = axios
-    .post("/api/auth", dataToSubmit, {
+    .get("/api/auth",  {
       headers: { "content-type": "application/json" },
     })
     .then((res) => res.data);

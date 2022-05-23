@@ -1,11 +1,16 @@
 package com.example.modules.account;
 
 import com.example.modules.account.form.*;
+import com.example.modules.utils.CryptoUtils;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionContext;
 import javax.validation.Valid;
 
 @Slf4j
@@ -28,9 +33,11 @@ public class AccountController {
      */
 
     private final AccountService accountService;
+    private final AccountRepository accountRepository;
+    private final CryptoUtils cryptoUtils;
 
     @GetMapping("/test")
-    public String sendTestFile(){
+    public String sendTestFile() {
         JsonObject obj = new JsonObject();
 
         obj.addProperty("sample1", "sample1-data");
@@ -46,27 +53,86 @@ public class AccountController {
     }
 
     @PostMapping("/register")
-    public boolean register(@Valid @RequestBody RegisterForm registerForm){
+    public boolean register(@Valid @RequestBody RegisterForm registerForm) {
         return accountService.register(registerForm);
     }
 
     @PostMapping("/login")
-    public String login(@Valid @RequestBody LoginForm loginForm){
-        return accountService.login(loginForm);
+    public boolean login(@Valid @RequestBody LoginForm loginForm,
+                        HttpServletRequest request) {
+        // 프론트의 로컬스토리지 쿠키에 토큰을 저장해야하므로 여기서 토큰을 뱉어줘야함.
+        Account account = accountRepository.findByEmail(loginForm.getEmail());
+
+        if (account == null) {
+            return false;
+        }
+
+        boolean checkPassword = cryptoUtils.comparePassword(loginForm.getPassword(), account.getPassword());
+
+        // 비밀번호 불일치
+        if (!checkPassword) {
+            return false;
+        }
+
+        // 비밀번호 일치
+//        String token = cryptoUtils.makeJwt(account.getEmail());
+//        account.setToken(token);
+//        accountRepository.save(account);
+        HttpSession session = request.getSession();
+        session.setAttribute("LOGIN_USER", account);
+
+        return true;
     }
 
-    @PostMapping("/auth")
-    public JsonObject auth(@Valid @RequestBody AuthForm authForm){
-        return accountService.auth(authForm);
+    @GetMapping("/auth")
+    public JsonObject auth(HttpServletRequest request) {
+        //        Account account = accountRepository.findByToken(authForm.getToken());
+        HttpSession session = request.getSession(false);
+
+        // 로그아웃
+        if (session == null) {
+            JsonObject obj = new JsonObject();
+            obj.addProperty("isAuth", false);
+
+            return obj;
+        }
+
+        // 여기부턴 로그인된 사용자
+        Account account = (Account) session.getAttribute("LOGIN_USER");
+
+        // 로그인 && 이메일 인증 됐다면
+        if (account.getEmailVerified()) {
+            return accountService.getMyInfo(account, true);
+        }
+
+        // 로그인 && 이메일 인증 X
+        return accountService.getMyInfo(account, false);
     }
 
-    @PostMapping("/logout")
-    public boolean logout(@Valid @RequestBody AuthForm authForm){
-        return accountService.logout(authForm);
+    @GetMapping("/logout")
+    public boolean logout(HttpServletRequest request) {
+//        Account account = accountRepository.findByToken(authForm.getToken());
+//
+//        if (account == null) {
+//            log.info("로그아웃 하려는 유저가 없습니다.");
+//            return false;
+//        }
+//
+//        account.setToken("");
+//        accountRepository.save(account);
+
+        HttpSession session = request.getSession(false);
+
+        if (session == null) {
+            return false;
+        }
+
+        session.invalidate();
+        return true;
     }
 
     @PostMapping("/check-email-token")
-    public JsonObject checkEmailToken(@Valid @RequestBody CheckEmailTokenForm checkEmailTokenForm){
+    public JsonObject checkEmailToken(@Valid @RequestBody CheckEmailTokenForm checkEmailTokenForm) {
         return accountService.checkEmailToken(checkEmailTokenForm);
     }
 }
