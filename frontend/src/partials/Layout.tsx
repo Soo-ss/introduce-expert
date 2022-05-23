@@ -8,16 +8,20 @@ function Layout() {
 
   const onLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    const token = localStorage.getItem("x_auth");
 
     axios
-      .get(
+      .post(
         "/api/logout",
+        { token },
         {
           headers: { "content-type": "application/json" },
         }
       )
       .then((res) => {
         if (res.data) {
+          console.log("로그아웃 하셨습니다.");
+          localStorage.removeItem("x_auth");
           return window.location.replace("/");
         } else {
           console.log("로그아웃 실패");

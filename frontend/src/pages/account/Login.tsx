@@ -4,6 +4,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import useReduxAuth from "../../redux/hooks/useReduxAuth";
 
 function Login() {
+  const { onAuth } = useReduxAuth();
+
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -20,7 +22,9 @@ function Login() {
         }
       )
       .then((res) => {
-        if (res.data) {
+        const token = res.data;
+        if (token !== "") {
+          localStorage.setItem("x_auth", token);
           return window.location.replace("/");
         } else {
           return <div>Error!!</div>;

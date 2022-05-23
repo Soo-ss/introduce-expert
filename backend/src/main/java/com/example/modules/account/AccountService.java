@@ -63,29 +63,6 @@ public class AccountService {
         return true;
     }
 
-    public String login(LoginForm loginForm) {
-        // 프론트의 로컬스토리지 쿠키에 토큰을 저장해야하므로 여기서 토큰을 뱉어줘야함.
-        Account account = accountRepository.findByEmail(loginForm.getEmail());
-
-        if (account == null) {
-            return "제공된 이메일에 해당하는 유저가 없습니다.";
-        }
-
-        boolean checkPassword = cryptoUtils.comparePassword(loginForm.getPassword(), account.getPassword());
-
-        // 비밀번호 불일치
-        if (!checkPassword) {
-            return "비밀번호가 일치하지 않습니다.";
-        }
-
-        // 비밀번호 일치
-        String token = cryptoUtils.makeJwt(account.getEmail());
-        account.setToken(token);
-        accountRepository.save(account);
-
-        return token;
-    }
-
     // 원하는 정보만 선택적으로 넘긴다.
     public JsonObject getMyInfo(Account account, boolean emailVerified) {
         JsonObject obj = new JsonObject();
@@ -97,44 +74,6 @@ public class AccountService {
         obj.addProperty("profileImage", account.getProfileImage());
 
         return obj;
-    }
-
-    public JsonObject auth(HttpServletRequest request) {
-//        Account account = accountRepository.findByToken(authForm.getToken());
-        HttpSession session = request.getSession(false);
-
-        // 로그아웃
-        JsonObject obj = new JsonObject();
-        if (session == null) {
-            obj.addProperty("isAuth", false);
-
-            return obj;
-        }
-
-        // 여기부턴 로그인된 사용자
-        Account account = (Account) session.getAttribute("LOGIN_USER");
-
-        // 로그인 && 이메일 인증 됐다면
-        if (account.getEmailVerified()) {
-            return getMyInfo(account, true);
-        }
-
-        // 로그인 && 이메일 인증 X
-        return getMyInfo(account, false);
-    }
-
-    public boolean logout(AuthForm authForm) {
-        Account account = accountRepository.findByToken(authForm.getToken());
-
-        if (account == null) {
-            log.info("로그아웃 하려는 유저가 없습니다.");
-            return false;
-        }
-
-        account.setToken("");
-        accountRepository.save(account);
-
-        return true;
     }
 
     public JsonObject checkEmailToken(CheckEmailTokenForm checkEmailTokenForm) {
