@@ -12,7 +12,7 @@ import java.util.UUID;
 public class Account {
 
     @Id @GeneratedValue
-    private Long id;
+    private Long userId;
 
     @Column(unique = true)
     private String email;

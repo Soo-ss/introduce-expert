@@ -67,7 +67,7 @@ public class AccountService {
     public JsonObject getMyInfo(Account account, boolean emailVerified) {
         JsonObject obj = new JsonObject();
         obj.addProperty("isAuth", true);
-        obj.addProperty("id", account.getId());
+        obj.addProperty("user_id", account.getUserId());
         obj.addProperty("email", account.getEmail());
         obj.addProperty("nickname", account.getNickname());
         obj.addProperty("emailVerified", emailVerified);

@@ -92,6 +92,8 @@ public class AccountController {
 
             return obj;
         }
+        // TODO: 토큰 검증 로직 나중에 짜기
+//        log.info("[토큰]" + cryptoUtils.checkJwt(authForm.getToken()));
 
         // 로그인 && 이메일 인증 됐다면
         if (account.getEmailVerified()) {
