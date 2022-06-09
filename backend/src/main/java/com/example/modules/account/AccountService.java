@@ -3,7 +3,6 @@ package com.example.modules.account;
 import com.example.infra.mail.EmailMessage;
 import com.example.infra.mail.EmailService;
 import com.example.modules.account.form.*;
-import com.example.modules.tag.Tag;
 import com.example.modules.utils.CryptoUtils;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -67,7 +66,7 @@ public class AccountService {
     public JsonObject getMyInfo(Account account, boolean emailVerified) {
         JsonObject obj = new JsonObject();
         obj.addProperty("isAuth", true);
-        obj.addProperty("user_id", account.getUserId());
+        obj.addProperty("user_id", account.getAccountId());
         obj.addProperty("email", account.getEmail());
         obj.addProperty("nickname", account.getNickname());
         obj.addProperty("emailVerified", emailVerified);
@@ -116,7 +115,4 @@ public class AccountService {
         accountRepository.save(account);
     }
 
-    public void addTag(Account account, Tag tag) {
-
-    }
 }

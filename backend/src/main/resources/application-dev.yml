@@ -13,10 +13,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+      use-new-id-generator-mappings: false
     show-sql: false
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    generate-ddl: true
+    generate-ddl: false
     properties:
       hibernate.format_sql: true
   mail:

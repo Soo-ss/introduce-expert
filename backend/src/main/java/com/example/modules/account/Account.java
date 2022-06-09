@@ -11,8 +11,9 @@ import java.util.UUID;
 @Builder @AllArgsConstructor @NoArgsConstructor
 public class Account {
 
-    @Id @GeneratedValue
-    private Long userId;
+    @Id
+    @GeneratedValue
+    private Long accountId;
 
     @Column(unique = true)
     private String email;
@@ -23,6 +24,8 @@ public class Account {
     private String password;
 
     private String token;
+
+    private String description;
 
     private boolean emailVerified;
 
