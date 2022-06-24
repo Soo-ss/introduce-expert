@@ -1,6 +1,16 @@
 spring:
   profiles:
     active: local
-
-app:
-  host: http://localhost:8080
+  messages:
+    basename: i18n/exception # ???
+    encoding: UTF-8
+  jwt:
+    secret: blahblah@$&
+  social:
+    kakao:
+      client_id: 8bcf5cda97f3a93d59e7e9bfaff6b5c5
+      redirect: /social/login/kakao
+      url:
+        login: https://kauth.kakao.com/oauth/authorize
+        token: https://kauth.kakao.com/oauth/token
+        profile: https://kapi.kakao.com/v2/user/me
