@@ -5,6 +5,7 @@ import com.api.backend.infra.response.model.CommonResult;
 import com.api.backend.infra.response.model.SingleResult;
 import com.api.backend.modules.account.Account;
 import com.api.backend.modules.account.AccountRepository;
+import com.api.backend.modules.account.form.RegisterForm;
 import com.api.backend.modules.expertClass.ExpertClass;
 import com.api.backend.modules.expertClass.ExpertClassService;
 import com.api.backend.modules.expertClass.ParamsExpertClass;
@@ -31,17 +32,28 @@ public class ExpertOnlyController {
 
     @ApiOperation(value = "가입", notes = "회원가입")
     @PostMapping("/register")
-    public CommonResult register(@ApiParam(value = "계정 이메일", required = true) @RequestParam String email,
-                                 @ApiParam(value = "비밀번호", required = true) @RequestParam String password,
-                                 @ApiParam(value = "이름", required = true) @RequestParam String name) {
+    public CommonResult register(@RequestBody RegisterForm registerForm) {
         Account newAccount = Account.builder()
-                .email(email)
-                .password(passwordEncoder.encode(password))
-                .name(name)
+                .email(registerForm.getEmail())
+                .password(passwordEncoder.encode(registerForm.getPassword()))
+                .name(registerForm.getName())
                 .roles(Arrays.asList("ROLE_ADMIN", "ROLE_USER"))
                 .build();
         accountRepository.save(newAccount);
 
         return responseService.getSuccessResult();
+    }
+
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
+    })
+    @ApiOperation(value = "엑스퍼트 클래스 리뷰 작성", notes = "엑스퍼트 클래스에 리뷰를 작성한다.")
+    @PostMapping("/generate")
+    public SingleResult<ExpertClass> generateClass(@Valid @RequestBody ParamsExpertClass paramsExpertClass){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        return responseService.getSingleResult(expertClassService.generateExpertClass(email, paramsExpertClass));
     }
 }

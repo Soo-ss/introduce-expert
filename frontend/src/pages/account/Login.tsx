@@ -1,11 +1,10 @@
 import axios from "axios";
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { POST_LOGIN } from "../../constant/api";
 import useReduxAuth from "../../redux/hooks/useReduxAuth";
 
 function Login() {
-  const { onAuth } = useReduxAuth();
-
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -13,23 +12,15 @@ function Login() {
     let email = formData.get("email") as string;
     let password = formData.get("password") as string;
 
-    axios
-      .post(
-        "/api/login",
-        { email, password },
-        {
-          headers: { "content-type": "application/json" },
-        }
-      )
-      .then((res) => {
-        const token = res.data;
-        if (token !== "") {
-          localStorage.setItem("x_auth", token);
-          return window.location.replace("/");
-        } else {
-          return <div>Error!!</div>;
-        }
-      });
+    axios.post(POST_LOGIN, { email, password }).then((res) => {
+      const token = res.data.data;
+      if (token !== "") {
+        localStorage.setItem("x_auth", token);
+        return window.location.replace("/");
+      } else {
+        return <div>Error!!</div>;
+      }
+    });
   }
 
   return (

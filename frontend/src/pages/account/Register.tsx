@@ -1,27 +1,26 @@
 import axios from "axios";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { POST_REGISTER } from "../../constant/api";
 
 function Register() {
   let navigate = useNavigate();
   const newUser = {
-    nickname: "kms",
     email: "kms334488@naver.com",
     password: "12345678",
+    name: "kms",
   };
   const submitButton = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     axios
-      .post("/api/register", newUser, {
+      .post(POST_REGISTER, newUser, {
         headers: { "content-type": "application/json" },
       })
       .then((res) => {
         console.log(res.data);
-        if (res.data) {
-          console.log("회원가입 성공");
-          navigate("/");
+        if (res.data.success) {
+          return window.location.replace("/");
         } else {
-          console.log("회원가입 에러");
         }
       });
   };

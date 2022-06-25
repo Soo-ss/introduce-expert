@@ -7,6 +7,8 @@ import com.api.backend.infra.config.security.JwtTokenProvider;
 import com.api.backend.infra.response.ResponseService;
 import com.api.backend.infra.response.model.CommonResult;
 import com.api.backend.infra.response.model.SingleResult;
+import com.api.backend.modules.account.form.LoginForm;
+import com.api.backend.modules.account.form.RegisterForm;
 import com.api.backend.modules.kakao.KakaoProfile;
 import com.api.backend.modules.kakao.KakaoService;
 import io.swagger.annotations.Api;
@@ -34,11 +36,10 @@ public class AccountController {
 
     @ApiOperation(value = "로그인", notes = "이메일로 계정 로그인")
     @PostMapping("/login")
-    public SingleResult<String> login(@ApiParam(value = "계정 이메일", required = true) @RequestParam String email,
-                                       @ApiParam(value = "비밀번호", required = true) @RequestParam String password) {
-        Account account = accountRepository.findByEmail(email)
+    public SingleResult<String> login(@RequestBody LoginForm loginForm) {
+        Account account = accountRepository.findByEmail(loginForm.getEmail())
                 .orElseThrow(CEmailLoginFailedException::new);
-        if (!passwordEncoder.matches(password, account.getPassword())) {
+        if (!passwordEncoder.matches(loginForm.getPassword(), account.getPassword())) {
             throw new CEmailLoginFailedException();
         }
 
@@ -50,13 +51,11 @@ public class AccountController {
 
     @ApiOperation(value = "가입", notes = "회원가입")
     @PostMapping("/register")
-    public CommonResult register(@ApiParam(value = "계정 이메일", required = true) @RequestParam String email,
-                               @ApiParam(value = "비밀번호", required = true) @RequestParam String password,
-                               @ApiParam(value = "이름", required = true) @RequestParam String name) {
+    public CommonResult register(@RequestBody RegisterForm registerForm) {
         Account newAccount = Account.builder()
-                .email(email)
-                .password(passwordEncoder.encode(password))
-                .name(name)
+                .email(registerForm.getEmail())
+                .password(passwordEncoder.encode(registerForm.getPassword()))
+                .name(registerForm.getName())
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build();
         accountRepository.save(newAccount);
@@ -65,7 +64,7 @@ public class AccountController {
     }
 
     @ApiOperation(value = "카카오 로그인", notes = "카카오 계정으로 로그인")
-    @PostMapping("/kakao-login/{provider}")
+    @PostMapping("/kakaoLogin/{provider}")
     public SingleResult<String> kakaoSignInProvider(
             @ApiParam(value = "서비스 제공자 provider", required = true, defaultValue = "kakao") @PathVariable String provider,
             @ApiParam(value = "카카오 access_token", required = true) @RequestParam String accessToken
@@ -77,7 +76,7 @@ public class AccountController {
     }
 
     @ApiOperation(value = "카카오 계정 가입", notes = "카카오 계정으로 회원가입")
-    @PostMapping("/kakao-register/{provider}")
+    @PostMapping("/kakaoRegister/{provider}")
     public CommonResult kakaoSignUpProvider(@ApiParam(value = "서비스 제공자 provider", required = true, defaultValue = "kakao") @PathVariable String provider,
                                             @ApiParam(value = "카카오 access_token", required = true) @RequestParam String accessToken,
                                             @ApiParam(value = "이름", required = true) @RequestParam String name){

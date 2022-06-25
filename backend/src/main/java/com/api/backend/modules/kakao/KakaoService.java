@@ -3,6 +3,7 @@ package com.api.backend.modules.kakao;
 import com.api.backend.infra.advice.exception.COAuthException;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.*;
@@ -11,6 +12,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class KakaoService {
@@ -57,7 +59,9 @@ public class KakaoService {
         params.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity(env.getProperty("spring.social.kakao.url.token"), request, String.class);
+        log.info("[kakao request]: {}", request);
+        ResponseEntity<String> response = restTemplate.postForEntity(
+                env.getProperty("spring.social.kakao.url.token"), request, String.class);
         if(response.getStatusCode() == HttpStatus.OK){
             return gson.fromJson(response.getBody(), ReturnKakaoAuth.class);
         }

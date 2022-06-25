@@ -3,6 +3,7 @@ package com.api.backend.modules.expertClass;
 import com.api.backend.infra.response.ResponseService;
 import com.api.backend.infra.response.model.CommonResult;
 import com.api.backend.infra.response.model.MultiResult;
+import com.api.backend.modules.account.Account;
 import com.api.backend.modules.review.ParamsReview;
 import com.api.backend.infra.response.model.SingleResult;
 import com.api.backend.modules.review.Review;
@@ -24,6 +25,13 @@ public class ExpertClassController {
     private final ExpertClassService expertClassService;
     private final ResponseService responseService;
     private final ReviewService reviewService;
+    private final ExpertClassRepository expertClassRepository;
+
+    @ApiOperation(value = "회원 조회", notes = "모든 회원을 조회한다.")
+    @GetMapping("/all")
+    public MultiResult<ExpertClass> findAllUser(){
+        return responseService.getMultiResult(expertClassRepository.findAll());
+    }
 
     @ApiOperation(value = "엑스퍼트 클래스 정보 조회", notes = "엑스퍼트 클래스 정보를 조회한다.")
     @GetMapping(value = "/{expertClassTitle}")
@@ -32,22 +40,9 @@ public class ExpertClassController {
     }
 
     @ApiOperation(value = "엑스퍼트 클래스 리뷰 리스트", notes = "엑스퍼트 클래스 리뷰 리스트를 조회한다.")
-    @GetMapping(value = "/{expertClassTitle}/reviews")
+    @GetMapping(value = "/reviews/{expertClassTitle}")
     public MultiResult<Review> reviews(@PathVariable String expertClassTitle) {
         return responseService.getMultiResult(reviewService.findReviews(expertClassTitle));
-    }
-
-
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
-    })
-    @ApiOperation(value = "엑스퍼트 클래스 리뷰 작성", notes = "엑스퍼트 클래스에 리뷰를 작성한다.")
-    @PostMapping("/generate")
-    public SingleResult<ExpertClass> generateClass(@Valid @RequestBody ParamsExpertClass paramsExpertClass){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-
-        return responseService.getSingleResult(expertClassService.generateExpertClass(email, paramsExpertClass));
     }
 
     @ApiImplicitParams({

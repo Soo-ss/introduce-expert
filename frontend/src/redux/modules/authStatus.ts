@@ -1,13 +1,13 @@
 import axios from "axios";
+import { GET_API_USER } from "../../constant/api";
 
 const AUTH_USER = "auth/AUTH_USER" as const;
 
-export const authUser = (token: any) => {
-  const request = axios
-    .post("/api/auth", token, {
-      headers: { "content-type": "application/json" },
-    })
-    .then((res) => res.data);
+export const authUser = () => {
+  const request = axios.get(GET_API_USER).then((res) => {
+    console.log(res.data);
+    return res.data;
+  });
 
   return {
     type: AUTH_USER,

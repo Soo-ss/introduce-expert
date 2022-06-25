@@ -4,7 +4,7 @@ import Layout from "./partials/Layout";
 import NotFound from "./pages/NotFound";
 import Auth from "./partials/Auth";
 import {
-  anyoneRoutes,
+  
   loggedInRoutes,
   loggedOutRoutes,
 } from "./partials/Routes";
@@ -13,7 +13,7 @@ function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        {anyoneRoutes.map((item, index) => {
+        {/* {anyoneRoutes.map((item, index) => {
           return (
             <Route
               key={index}
@@ -21,7 +21,7 @@ function App() {
               element={<Auth option={null}>{item.jsxElement}</Auth>}
             />
           );
-        })}
+        })} */}
         {loggedOutRoutes.map((item, index) => {
           return (
             <Route
@@ -40,7 +40,7 @@ function App() {
             />
           );
         })}
-        <Route path="*" element={<NotFound />} />
+        {/* <Route path="*" element={<NotFound />} /> */}
       </Route>
     </Routes>
   );

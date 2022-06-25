@@ -30,10 +30,10 @@ function Layout() {
   };
 
   // 로그아웃 상태
-  if (!authInfo.isAuth) {
+  if (!authInfo.success) {
     return (
       <div>
-        <h1>스프링 리액트 연습 페이지</h1>
+        <h1>Introduce Expert</h1>
         <nav>
           <li>
             <a href="/">메인 페이지</a>
@@ -43,6 +43,12 @@ function Layout() {
           </li>
           <li>
             <a href="/register">회원가입 페이지</a>
+          </li>
+          <li>
+            <a href="/registerExpert">엑스퍼트 회원가입 페이지</a>
+          </li>
+          <li>
+            <a href="/loginKakao">카카오 계정으로 로그인 페이지</a>
           </li>
         </nav>
         <div className="content">
@@ -54,7 +60,7 @@ function Layout() {
   // 로그인 상태
   return (
     <div>
-      <h1>스프링 리액트 연습 페이지</h1>
+      <h1>Introduce Expert</h1>
       <nav>
         <li>
           <button onClick={onLogout}>로그아웃 버튼</button>
@@ -69,13 +75,13 @@ function Layout() {
           <a href={`/profile/${authInfo.nickname}`}>나의 프로필</a>
         </li>
       </nav>
-      {authInfo.emailVerified ? (
+      {/* {authInfo.emailVerified ? (
         ""
       ) : (
         <div>
           <h3 style={{ color: "red" }}>이메일 인증을 해주세요</h3>
         </div>
-      )}
+      )} */}
       <div className="content">
         <Outlet />
       </div>

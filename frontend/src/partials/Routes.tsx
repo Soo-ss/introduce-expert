@@ -8,8 +8,23 @@ import SettingAccount from "../pages/settings/SettingAccount";
 import SettingNotifications from "../pages/settings/SettingNotifications";
 import SettingPassword from "../pages/settings/SettingPassword";
 import SettingProfile from "../pages/settings/SettingProfile";
+import DetailExpertClass from "../pages/expertClass/DetailExpertClass";
+import LoginKakao from "../pages/kakao/LoginKakao";
+import RegisterExpert from "../pages/expertOnly/RegisterExpert";
+import GenerateExpertClass from "../pages/expertOnly/GenerateExpertClass";
 
-export const anyoneRoutes = [
+// export const anyoneRoutes = [
+//   {
+//     path: "/",
+//     jsxElement: <Main />,
+//   },
+//   {
+//     path: "check-email-token",
+//     jsxElement: <CheckEmailToken />,
+//   },
+// ];
+
+export const loggedOutRoutes = [
   {
     path: "/",
     jsxElement: <Main />,
@@ -18,9 +33,6 @@ export const anyoneRoutes = [
     path: "check-email-token",
     jsxElement: <CheckEmailToken />,
   },
-];
-
-export const loggedOutRoutes = [
   {
     path: "login",
     jsxElement: <Login />,
@@ -28,6 +40,14 @@ export const loggedOutRoutes = [
   {
     path: "register",
     jsxElement: <Register />,
+  },
+  {
+    path: "loginKakao",
+    jsxElement: <LoginKakao />,
+  },
+  {
+    path: "registerExpert",
+    jsxElement: <RegisterExpert />,
   },
 ];
 
@@ -55,5 +75,13 @@ export const loggedInRoutes = [
   {
     path: "settings/account",
     jsxElement: <SettingAccount />,
+  },
+  {
+    path: "expertOnly/detail",
+    jsxElement: <DetailExpertClass />,
+  },
+  {
+    path: "expertOnly/generate",
+    jsxElement: <GenerateExpertClass />,
   },
 ];

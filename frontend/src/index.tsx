@@ -8,11 +8,15 @@ import { Provider } from "react-redux";
 import ReduxThunk from "redux-thunk";
 import promiseMiddleware from "redux-promise";
 import rootReducer from "./redux/modules";
+import axios from "axios";
 
 const createStoreWithMiddleware = applyMiddleware(
   promiseMiddleware,
   ReduxThunk
 )(createStore);
+
+const token = localStorage.getItem("x_auth");
+axios.defaults.headers.common["X-AUTH-TOKEN"] = token!;
 
 ReactDOM.render(
   <React.StrictMode>
