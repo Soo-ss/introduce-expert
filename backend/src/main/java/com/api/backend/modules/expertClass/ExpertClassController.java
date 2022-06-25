@@ -3,13 +3,11 @@ package com.api.backend.modules.expertClass;
 import com.api.backend.infra.response.ResponseService;
 import com.api.backend.infra.response.model.CommonResult;
 import com.api.backend.infra.response.model.MultiResult;
-import com.api.backend.infra.response.model.ParamsReview;
+import com.api.backend.modules.review.ParamsReview;
 import com.api.backend.infra.response.model.SingleResult;
 import com.api.backend.modules.review.Review;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import com.api.backend.modules.review.ReviewService;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,34 +23,49 @@ public class ExpertClassController {
 
     private final ExpertClassService expertClassService;
     private final ResponseService responseService;
+    private final ReviewService reviewService;
 
     @ApiOperation(value = "엑스퍼트 클래스 정보 조회", notes = "엑스퍼트 클래스 정보를 조회한다.")
-    @GetMapping(value = "/{expertClassName}")
-    public SingleResult<ExpertClass> expertClassInfo(@PathVariable String expertClassName) {
-        return responseService.getSingleResult(expertClassService.findExpertClass(expertClassName));
+    @GetMapping(value = "/{expertClassTitle}")
+    public SingleResult<ExpertClass> expertClassInfo(@PathVariable String expertClassTitle) {
+        return responseService.getSingleResult(expertClassService.getExpertClassTitle(expertClassTitle));
     }
 
     @ApiOperation(value = "엑스퍼트 클래스 리뷰 리스트", notes = "엑스퍼트 클래스 리뷰 리스트를 조회한다.")
-    @GetMapping(value = "/{expertClassName}/reviews")
-    public MultiResult<Review> reviews(@PathVariable String expertClassName) {
-        return responseService.getMultiResult(expertClassService.findReviews(expertClassName));
+    @GetMapping(value = "/{expertClassTitle}/reviews")
+    public MultiResult<Review> reviews(@PathVariable String expertClassTitle) {
+        return responseService.getMultiResult(reviewService.findReviews(expertClassTitle));
+    }
+
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
+    })
+    @ApiOperation(value = "엑스퍼트 클래스 리뷰 작성", notes = "엑스퍼트 클래스에 리뷰를 작성한다.")
+    @PostMapping("/generate")
+    public SingleResult<ExpertClass> generateClass(@Valid @RequestBody ParamsExpertClass paramsExpertClass){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        return responseService.getSingleResult(expertClassService.generateExpertClass(email, paramsExpertClass));
     }
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
     })
     @ApiOperation(value = "엑스퍼트 클래스 리뷰 작성", notes = "엑스퍼트 클래스에 리뷰를 작성한다.")
-    @PostMapping(value = "/{expertClassName}")
-    public SingleResult<Review> review(@PathVariable String expertClassName, @Valid @ModelAttribute ParamsReview review) {
+    @PostMapping(value = "/{expertClassTitle}")
+    public SingleResult<Review> review(@PathVariable String expertClassTitle, @Valid @ModelAttribute ParamsReview review) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        return responseService.getSingleResult(expertClassService.writePost(email, expertClassName, review));
+
+        return responseService.getSingleResult(reviewService.writeReview(email, expertClassTitle, review));
     }
 
     @ApiOperation(value = "엑스퍼트 클래스 리뷰 상세", notes = "엑스퍼트 클래스 리뷰 상세정보를 조회한다.")
     @GetMapping(value = "/review/{reviewId}")
     public SingleResult<Review> review(@PathVariable long reviewId) {
-        return responseService.getSingleResult(expertClassService.getReview(reviewId));
+        return responseService.getSingleResult(reviewService.getReview(reviewId));
     }
 
     @ApiImplicitParams({
@@ -63,7 +76,8 @@ public class ExpertClassController {
     public SingleResult<Review> review(@PathVariable long reviewId, @Valid @ModelAttribute ParamsReview review) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        return responseService.getSingleResult(expertClassService.updateReview(reviewId, email, review));
+
+        return responseService.getSingleResult(reviewService.updateReview(reviewId, email, review));
     }
 
     @ApiImplicitParams({
@@ -74,7 +88,8 @@ public class ExpertClassController {
     public CommonResult deleteReview(@PathVariable long reviewId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        expertClassService.deleteReview(reviewId, email);
+        reviewService.deleteReview(reviewId, email);
+
         return responseService.getSuccessResult();
     }
 }

@@ -11,10 +11,10 @@ public class CacheService {
 
     @Caching(evict = {
             @CacheEvict(value = CacheKey.REVIEW, key = "#reviewId"),
-            @CacheEvict(value = CacheKey.REVIEWS, key = "#expertClassName")
+            @CacheEvict(value = CacheKey.REVIEWS, key = "#expertClassTitle")
     })
-    public boolean deleteReviewCache(long reviewId, String expertClassName){
-        log.debug("deleteReviewCache - reviewId {}, expertClassName {}", reviewId, expertClassName);
+    public boolean deleteReviewCache(long reviewId, String expertClassTitle){
+        log.debug("deleteReviewCache - reviewId {}, expertClassTitle {}", reviewId, expertClassTitle);
         return true;
     }
 }

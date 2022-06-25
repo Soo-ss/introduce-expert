@@ -1,4 +1,4 @@
-package com.api.backend.infra.response.model;
+package com.api.backend.modules.review;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -11,11 +11,6 @@ import javax.validation.constraints.Size;
 @Getter @Setter
 @NoArgsConstructor
 public class ParamsReview {
-
-    @NotEmpty
-    @Size(min = 2, max = 50)
-    @ApiModelProperty(value = "작성자명", required = true)
-    private String author;
 
     @NotEmpty
     @Size(min = 2, max = 100)

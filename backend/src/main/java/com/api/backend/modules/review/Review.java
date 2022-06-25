@@ -4,6 +4,8 @@ import com.api.backend.infra.utils.CommonDateEntity;
 import com.api.backend.modules.account.Account;
 import com.api.backend.modules.expertClass.ExpertClass;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,16 +13,15 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
+@Builder
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Review extends CommonDateEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewId;
-
-    @Column(nullable = false, length = 50)
-    private String author;
 
     @Column(nullable = false, length = 100)
     private String title;
@@ -42,16 +43,14 @@ public class Review extends CommonDateEntity implements Serializable {
         return expertClass;
     }
 
-    public Review(Account account, ExpertClass expertClass, String author, String title, String content) {
+    public Review(Account account, ExpertClass expertClass, String title, String content) {
         this.account = account;
         this.expertClass = expertClass;
-        this.author = author;
         this.title = title;
         this.content = content;
     }
 
-    public Review setUpdate(String author, String title, String content) {
-        this.author = author;
+    public Review setUpdate(String title, String content) {
         this.title = title;
         this.content = content;
 

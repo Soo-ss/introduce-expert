@@ -1,6 +1,6 @@
 package com.api.backend.infra.utils;
 
-import com.api.backend.infra.response.model.ParamsReview;
+import com.api.backend.modules.review.ParamsReview;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
