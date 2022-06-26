@@ -13,14 +13,21 @@ function GenerateExpertClass() {
   };
   const submitButton = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    
-    axios.post(POST_GENERATE, body).then((res) => {
-      console.log(res.data);
-      if (res.data.success) {
-        return window.location.replace("/");
-      } else {
-      }
-    });
+
+    const token = localStorage.getItem("x_auth");
+    axios
+      .post(POST_GENERATE, body, {
+        headers: {
+          "X-AUTH-TOKEN": token!,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.success) {
+          return window.location.replace("/");
+        } else {
+        }
+      });
   };
 
   return (

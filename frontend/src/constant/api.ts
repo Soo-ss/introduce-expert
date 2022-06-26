@@ -1,5 +1,6 @@
-export const POST_KAKAO_LOGIN = "/api/kakaoLogin/";
-export const POST_KAKAO_REGISTER = "/api/kakaoRegister/";
+// 카카오니깐 provider는 kakao로 고정
+export const POST_KAKAO_LOGIN = "/api/kakaoLogin/kakao?";
+export const POST_KAKAO_REGISTER = "/api/kakaoRegister/kakao?";
 export const POST_LOGIN = "/api/login";
 export const POST_REGISTER = "/api/register";
 export const POST_LOGOUT = "/api/logout";

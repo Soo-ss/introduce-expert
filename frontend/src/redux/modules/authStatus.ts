@@ -4,10 +4,17 @@ import { GET_API_USER } from "../../constant/api";
 const AUTH_USER = "auth/AUTH_USER" as const;
 
 export const authUser = () => {
-  const request = axios.get(GET_API_USER).then((res) => {
-    console.log(res.data);
-    return res.data;
-  });
+  const token = localStorage.getItem("x_auth");
+  const request = axios
+    .get(GET_API_USER, {
+      headers: {
+        "X-AUTH-TOKEN": token!,
+      },
+    })
+    .then((res) => {
+      console.log(res.data);
+      return res.data;
+    });
 
   return {
     type: AUTH_USER,

@@ -12,6 +12,7 @@ import DetailExpertClass from "../pages/expertClass/DetailExpertClass";
 import LoginKakao from "../pages/kakao/LoginKakao";
 import RegisterExpert from "../pages/expertOnly/RegisterExpert";
 import GenerateExpertClass from "../pages/expertOnly/GenerateExpertClass";
+import RegisterKakao from "../pages/kakao/RegisterKakao";
 
 // export const anyoneRoutes = [
 //   {
@@ -48,6 +49,10 @@ export const loggedOutRoutes = [
   {
     path: "registerExpert",
     jsxElement: <RegisterExpert />,
+  },
+  {
+    path: "social/login/kakao",
+    jsxElement: <RegisterKakao />,
   },
 ];
 

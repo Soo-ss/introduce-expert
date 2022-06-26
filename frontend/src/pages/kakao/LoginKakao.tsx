@@ -7,7 +7,7 @@ function LoginKakao() {
   const profileUrl = process.env.REACT_APP_PROFILE_URL;
   const redirectUrl = process.env.REACT_APP_REDIRECT_URL;
   const tokenUrl = process.env.REACT_APP_TOKEN_URL;
-  const baseServerUrl = "http://localhost:8080";
+  const baseUrl = "http://localhost:3000";
 
   let loginUrlString =
     loginUrl +
@@ -15,7 +15,7 @@ function LoginKakao() {
     clientId +
     "&response_type=code" +
     "&redirect_uri=" +
-    baseServerUrl +
+    baseUrl +
     redirectUrl;
 
   function popupKakaoLogin(event: React.MouseEvent<HTMLButtonElement>) {

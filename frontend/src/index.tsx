@@ -15,8 +15,8 @@ const createStoreWithMiddleware = applyMiddleware(
   ReduxThunk
 )(createStore);
 
-const token = localStorage.getItem("x_auth");
-axios.defaults.headers.common["X-AUTH-TOKEN"] = token!;
+// const token = localStorage.getItem("x_auth");
+// axios.defaults.headers.common["X-AUTH-TOKEN"] = token!;
 
 ReactDOM.render(
   <React.StrictMode>
