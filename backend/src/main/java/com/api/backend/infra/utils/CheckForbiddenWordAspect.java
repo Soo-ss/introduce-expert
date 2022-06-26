@@ -65,7 +65,7 @@ public class CheckForbiddenWordAspect {
 
     // TODO: 입력된 문장에 금칙어가 포함되어 있으면 Exception을 발생시킨다.
     private void checkForbiddenWord(String word) {
-        List<String> forbiddenWords = Arrays.asList("개새끼", "금칙어", "씨발");
+        List<String> forbiddenWords = Arrays.asList("나쁜말", "금칙어", "매우 나쁜말", "너무 나쁜말", "상처받는말");
         Optional<String> forbiddenWord = forbiddenWords.stream().filter(word::contains).findFirst();
         if (forbiddenWord.isPresent())
             throw new CForbiddenWordException(forbiddenWord.get());
