@@ -17,10 +17,8 @@ import java.util.Optional;
 @Component
 public class CheckForbiddenWordAspect {
 
-    // TODO: 어노테이션이 설정된 메서드가 실행되기 직전(Before)에 금칙어 체크를 적용.
     @Before(value = "@annotation(checkForbiddenWord)")
     public void forbiddenWordCheck(JoinPoint pjp, CheckForbiddenWord checkForbiddenWord) throws Throwable {
-        // TODO: 금칙어를 체크할 메서드의 파라미터가 객체인지(객체.필드명) 일반 String인지에 따라 구분하여 처리.
         String[] param = checkForbiddenWord.param().split("\\.");
         String paramName;
         String fieldName = "";
@@ -30,27 +28,22 @@ public class CheckForbiddenWordAspect {
         } else {
             paramName = checkForbiddenWord.param();
         }
-        // TODO: 파라미터 이름으로 메서드의 몇번째 파라미터인지 구한다.
         Integer parameterIdx = getParameterIdx(pjp, paramName);
         if (parameterIdx == -1)
             throw new IllegalArgumentException();
 
         String checkWord;
-        // TODO: 금칙어 체크할 문장을 객체내의 필드값에서 알아내야 할 경우(리플렉션 이용)
         if (StringUtils.isNotEmpty(fieldName)) {
             Class<?> clazz = checkForbiddenWord.checkClazz();
             Field field = clazz.getDeclaredField(fieldName);
             field.setAccessible(true);
             checkWord = (String) field.get(pjp.getArgs()[parameterIdx]);
-            // TODO: 금칙어 체크할 문장이 String형태의 파라미터로 넘어오는 경우
         } else {
             checkWord = (String) pjp.getArgs()[parameterIdx];
         }
-        // TODO: 체크할 문장에 금칙어가 포함되어 있는지 확인.
         checkForbiddenWord(checkWord);
     }
 
-    // TODO: 메서드의 파라미터 이름으로 몇번째 파라미터인지 구한다.
     private Integer getParameterIdx(JoinPoint joinPoint, String paramName) {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         String[] parameterNames = methodSignature.getParameterNames();
@@ -63,7 +56,6 @@ public class CheckForbiddenWordAspect {
         return -1;
     }
 
-    // TODO: 입력된 문장에 금칙어가 포함되어 있으면 Exception을 발생시킨다.
     private void checkForbiddenWord(String word) {
         List<String> forbiddenWords = Arrays.asList("나쁜말", "금칙어", "매우 나쁜말", "너무 나쁜말", "상처받는말");
         Optional<String> forbiddenWord = forbiddenWords.stream().filter(word::contains).findFirst();

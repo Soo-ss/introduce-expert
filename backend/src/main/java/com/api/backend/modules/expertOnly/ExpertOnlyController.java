@@ -37,7 +37,7 @@ public class ExpertOnlyController {
                 .email(registerForm.getEmail())
                 .password(passwordEncoder.encode(registerForm.getPassword()))
                 .name(registerForm.getName())
-                .roles(Arrays.asList("ROLE_ADMIN", "ROLE_USER"))
+                .roles(Arrays.asList("ROLE_EXPERT", "ROLE_USER"))
                 .build();
         accountRepository.save(newAccount);
 

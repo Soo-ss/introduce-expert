@@ -8,7 +8,8 @@ import lombok.Setter;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 public class ParamsExpertClass {
 
@@ -24,9 +25,8 @@ public class ParamsExpertClass {
     @ApiModelProperty(value = "가격", required = true)
     private Integer price;
 
-    // TODO: @NotEmpty는 String만 되는듯, 한번만 되는듯
     @NotEmpty
-    @ApiModelProperty(value="제목", required = true)
+    @ApiModelProperty(value = "제목", required = true)
     private String title;
 
     @Size(min = 2, max = 500)

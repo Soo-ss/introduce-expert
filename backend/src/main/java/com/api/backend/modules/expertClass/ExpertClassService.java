@@ -36,9 +36,6 @@ public class ExpertClassService {
                 .build();
         expertClassRepository.save(newExpertClass);
 
-//        ExpertClass nowExpertClass = expertClassService.getExpertClassTitle(expertClass.getTitle());
-//        expertClassRepository.save(nowExpertClass.)
-
         return newExpertClass;
     }
 }

@@ -40,30 +40,26 @@ public class JwtTokenProvider {
         Date now = new Date();
 
         return Jwts.builder()
-                .setClaims(claims) // TODO: data
-                .setIssuedAt(now) // TODO: token 발행일자
+                .setClaims(claims)
+                .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + tokenValidMilisecond))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 
-    // TODO: Jwt 토큰으로 인증 정보를 조회
     public Authentication getAuthentication(String token){
         UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    // TODO: Jwt 토큰에서 회원 구별 정보 추출
     public String getUserPk(String token){
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
-    // TODO: Request의 Header에서 token 파싱 : "X-AUTH-TOKEN: jwt토큰"
     public String resolveToken(HttpServletRequest req){
         return req.getHeader("X-AUTH-TOKEN");
     }
 
-    // TODO: Jwt 토큰의 유효성 + 만료일자 확인
     public boolean validateToken(String jwtToken){
         try{
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);

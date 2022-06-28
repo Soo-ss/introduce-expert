@@ -39,7 +39,6 @@ public class ReviewService {
         return reviewRepository.findById(reviewId).orElseThrow(CResourceNotExistException::new);
     }
 
-    // TODO: 게시글 등록후 캐시 삭제
     @CacheEvict(value = CacheKey.REVIEWS, key = "#expertClassName")
     @CheckForbiddenWord
     public Review writeReview(String email, String expertClassName, ParamsReview paramsReview) {
@@ -60,7 +59,6 @@ public class ReviewService {
         if (!email.equals(account.getEmail()))
             throw new CNotOwnerException();
 
-        // TODO: 영속성 컨텍스트의 변경감지(dirty checking) 기능에 의해 조회한 Post내용을 변경만 해도 Update쿼리가 실행됩니다.
         review.setUpdate(paramsReview.getTitle(), paramsReview.getContent());
         cacheService.deleteReviewCache(review.getReviewId(), review.getExpertClass().getTitle());
         return review;
@@ -76,13 +74,4 @@ public class ReviewService {
 
         return true;
     }
-
-    // TODO: AOP 방식 안쓰고 이거 쓰면 중복코드때문에 유지보수 힘들다.
-//    public void checkForbiddenWord(String word){
-//        List<String> forbiddenWords = Arrays.asList("금칙어", "금칙어2");
-//        Optional<String> forbiddenWord = forbiddenWords.stream().filter(word::contains).findFirst();
-//        if(forbiddenWord.isPresent()){
-//            throw new CForbiddenWordException(forbiddenWord.get());
-//        }
-//    }
 }

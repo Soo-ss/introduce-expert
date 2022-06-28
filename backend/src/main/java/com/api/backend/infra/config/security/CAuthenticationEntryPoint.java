@@ -12,7 +12,6 @@ import java.io.IOException;
 @Component
 public class CAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    // TODO: 예외 발생할 경우 /exception/entrypoint로 포워딩되도록 처리함.
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.sendRedirect("/exception/entrypoint");
