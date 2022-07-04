@@ -14,4 +14,11 @@ public class HelloController {
     public String hello(){
         return "hello ec2";
     }
+
+    @GetMapping("/longProcess")
+    public String pause() throws InterruptedException{
+        // 10s
+        Thread.sleep(10000);
+        return "Process finished";
+    }
 }

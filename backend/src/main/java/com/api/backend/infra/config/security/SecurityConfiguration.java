@@ -37,7 +37,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/*/login", "/*/kakaoLogin/**", "/*/register", "/*/kakaoRegister/**", "/social/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/exception/**", "/hello/**", "/api/expertClass/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/exception/**", "/hello/**", "/api/expertClass/**", "/actuator/health").permitAll()
                 .antMatchers("/*/users").hasRole("EXPERT")
                 .anyRequest().hasRole("USER")
                 .and()
